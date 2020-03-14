@@ -33,7 +33,7 @@ function checkCashRegister(price, cash, cid) {
     }
   });
 
-  // 価格の大きいキャッシュから順に、お釣りに当てはめてく
+  // 単価の高いキャッシュから順に、お釣りに当てはめてく
   // tempCidからその分の金額を引いていく
   let forExchange = [];
 
@@ -49,14 +49,16 @@ function checkCashRegister(price, cash, cid) {
       let amount = neededCash[i][1] * kazu;
       need = (need * 1000 - amount * 1000) / 1000;
       tempCid[i][1] -= amount;
-      neededCash[i][3] -= kazu;
       forExchange.push([neededCash[i][0], amount]);
     }
   }
 
   // cidの残り金額計算
-  let leftCash = tempCid.filter(item => item[1] > 0).reduce(function (a, b){ return a  + b[1] *1000}, 0)/1000;
-  
+  let leftCash =
+    tempCid.reduce(function(a, b) {
+      return a + b[1] * 1000;
+    }, 0) / 1000;
+
   if (need == 0 && leftCash == 0) {
     return { status: "CLOSED", change: cid };
   } else if (need == 0 && leftCash > 0) {
@@ -66,5 +68,15 @@ function checkCashRegister(price, cash, cid) {
   }
 }
 
-let answer = checkCashRegister(3.26, 100, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
+let answer = checkCashRegister(3.26, 100, [
+  ["PENNY", 1.01],
+  ["NICKEL", 2.05],
+  ["DIME", 3.1],
+  ["QUARTER", 4.25],
+  ["ONE", 90],
+  ["FIVE", 55],
+  ["TEN", 20],
+  ["TWENTY", 60],
+  ["ONE HUNDRED", 100]
+]);
 console.log(answer);
